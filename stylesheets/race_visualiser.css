@@ -10,6 +10,10 @@ html, body {
   margin: 0 auto;
 }
 
+#paths, #labels {
+  float: left;
+}
+
 #labels ol {
   list-style: none;
   padding: 0;

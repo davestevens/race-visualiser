@@ -1,7 +1,8 @@
 define [
   "backbone"
+  "views/paths"
   "views/labels"
-], (Backbone, LabelsView) ->
+], (Backbone, PathsView, LabelsView) ->
   RaceVisualiser = Backbone.View.extend
     initialize: (options = {}) ->
       _.extend(@options, options)
@@ -11,14 +12,17 @@ define [
 
     render: (options = {}) ->
       start = @options.start || 0
-      end = @options.end || (@data.splits * @data.laps) - 1
+      end = @options.end || (@data.splits * @data.laps)
 
-      # Get width and height
-      console.log @_width(), @_height()
-      # Create an svg (container)
-
-      console.log start, end
       # render paths (based on start + end)
+      $paths = $("<div/>", id: "paths", width: @_width())
+        .appendTo(@$el)
+      @paths_view = new PathsView
+        el: $paths
+        collection: @data.data
+        width: @_width()
+        path_height: @options.path_height
+      @paths_view.render(start, end)
 
       # render labels (based on end)
       $labels = $("<div/>", id: "labels", width: @options.labels_width)
@@ -32,7 +36,6 @@ define [
       labels_width: 150
 
     _width: -> (@width || @_calculate_width()) - @options.labels_width
-    _height: -> @height || @_calculate_height()
 
-    _calculate_width: -> @el.offsetWidth
-    _calculate_height: -> @data.data.length * @options.path_height
+    # Using .offsetWidth or .width() returns a rounded pixel value
+    _calculate_width: -> Math.floor(@el.getBoundingClientRect().width)

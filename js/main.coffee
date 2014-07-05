@@ -1,9 +1,9 @@
 requirejs.config
-  baseUrl: "js"
+  baseUrl: "js/app"
   paths:
-    underscore: "lib/underscore"
-    backbone: "lib/backbone"
-    jquery: "lib/jquery-2.1.1"
+    underscore: "../lib/underscore"
+    backbone: "../lib/backbone"
+    jquery: "../lib/jquery-2.1.1"
   shim:
     backbone:
       deps: ["jquery", "underscore"]
