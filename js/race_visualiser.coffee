@@ -21,15 +21,17 @@ define [
       # render paths (based on start + end)
 
       # render labels (based on end)
-      $labels = $("<div/>", id: "labels").appendTo(@$el)
+      $labels = $("<div/>", id: "labels", width: @options.labels_width)
+        .appendTo(@$el)
       @labels_view = new LabelsView(el: $labels, collection: @data.data)
       @labels_view.render(end)
 
     # Options
     options:
       path_height: 20
+      labels_width: 150
 
-    _width: -> @width || @_calculate_width()
+    _width: -> (@width || @_calculate_width()) - @options.labels_width
     _height: -> @height || @_calculate_height()
 
     _calculate_width: -> @el.offsetWidth
