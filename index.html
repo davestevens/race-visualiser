@@ -24,5 +24,12 @@
 
     <script src="data/example.js"></script>
     <script src="js/race-visualiser.js"></script>
+
+    <script>
+      var race_visualiser = new RaceVisualiser(
+        { data: data, el: document.getElementById("race-visualiser") }
+      );
+      race_visualiser.render();
+    </script>
   </body>
 </html>
