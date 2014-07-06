@@ -9,7 +9,8 @@ define ["underscore", "lib/svg"], (_, Svg) ->
       styles = { strokeWidth: "3px", fill: "none" }
 
       positions_selection = _.map(@options.data, (datum) ->
-        datum.positions[start..end]
+        positions: datum.positions[start..end]
+        count: end - start
       )
 
       paths_group = Svg.element("g", attributes, styles)
@@ -17,7 +18,8 @@ define ["underscore", "lib/svg"], (_, Svg) ->
         element.appendChild(@_path(item)) for item in positions_selection
       )
 
-    _path: (positions) ->
+    _path: (options) ->
+      positions = options.positions
       length = positions.length
 
       start = @_position_to_coord(0, positions[0])
@@ -27,7 +29,9 @@ define ["underscore", "lib/svg"], (_, Svg) ->
         path += @_curve(positions, index) if @_position_change(positions, index)
 
       end = @_position_to_coord(length - 1, positions[length - 1])
-      path += "L#{end.x + (2 * @options.horizontal_padding)},#{end.y}"
+      # TODO: display when non-finisher
+      end_x = options.count * @options.dx
+      path += "L#{end_x + (2 * @options.horizontal_padding)},#{end.y}"
 
       attributes = { d: path }
       styles = { stroke: "#8D8D8D" }
