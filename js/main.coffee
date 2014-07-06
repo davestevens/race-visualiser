@@ -11,7 +11,7 @@ requirejs.config
     underscore:
       exports: "_"
 
-define ["jquery", "race_visualiser"], ($, RaceVisualiser) ->
+require ["jquery", "race_visualiser"], ($, RaceVisualiser) ->
   race_visualiser = new RaceVisualiser
     el: "#race_visualiser"
     data: data
