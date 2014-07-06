@@ -4,7 +4,8 @@ define [
   "lib/style"
   "lib/markers"
   "lib/paths"
-], (Backbone, Svg, Style, Markers, Paths) ->
+  "lib/position_markers"
+], (Backbone, Svg, Style, Markers, Paths, PositionMarkers) ->
   PathsView = Backbone.View.extend
     initialize: (options = {}) ->
       _.extend(@options, options)
@@ -16,6 +17,7 @@ define [
       svg.appendChild(@_style().build())
       svg.appendChild(@_markers().build())
       svg.appendChild(@_paths().build(start, end))
+      svg.appendChild(@_position_markers().build(start, end))
 
       @$el.html(svg)
 
@@ -34,6 +36,13 @@ define [
 
     _paths: ->
       new Paths
+        data: @collection
+        dx: @_dx()
+        horizontal_padding: @options.horizontal_padding
+        path_height: @options.path_height
+
+    _position_markers: ->
+      new PositionMarkers
         data: @collection
         dx: @_dx()
         horizontal_padding: @options.horizontal_padding

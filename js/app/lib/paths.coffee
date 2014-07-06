@@ -11,6 +11,7 @@ define ["underscore", "lib/svg"], (_, Svg) ->
       positions_selection = _.map(@options.data, (datum) ->
         positions: datum.positions[start..end]
         count: end - start
+        id: datum.id
       )
 
       paths_group = Svg.element("g", attributes, styles)
@@ -33,7 +34,7 @@ define ["underscore", "lib/svg"], (_, Svg) ->
       end_x = options.count * @options.dx
       path += "L#{end_x + (2 * @options.horizontal_padding)},#{end.y}"
 
-      attributes = { d: path }
+      attributes = { id: options.id, d: path }
       styles = { stroke: "#8D8D8D" }
       Svg.element("path", attributes, styles)
 

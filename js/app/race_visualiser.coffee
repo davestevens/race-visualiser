@@ -10,6 +10,8 @@ define [
 
       throw new Error "Please define data" unless @data
 
+      _.each(@data.data, (datum, index) -> datum.id = "d#{index}")
+
     render: (options = {}) ->
       start = @options.start || 0
       end = @options.end || (@data.splits * @data.laps)
