@@ -21,17 +21,22 @@ define [
         el: $paths
         collection: @data.data
         width: @_width()
+        horizontal_padding: @options.horizontal_padding
         path_height: @options.path_height
       @paths_view.render(start, end)
 
       # render labels (based on end)
       $labels = $("<div/>", id: "labels", width: @options.labels_width)
         .appendTo(@$el)
-      @labels_view = new LabelsView(el: $labels, collection: @data.data)
+      @labels_view = new LabelsView
+        el: $labels
+        collection: @data.data
+        path_height: @options.path_height
       @labels_view.render(end)
 
     # Options
     options:
+      horizontal_padding: 30
       path_height: 20
       labels_width: 150
 

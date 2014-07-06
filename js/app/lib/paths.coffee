@@ -34,8 +34,7 @@ define ["underscore", "lib/svg"], (_, Svg) ->
       Svg.element("path", attributes, styles)
 
     _position_to_coord: (index, position) ->
-      # TODO: Make dy (20) an option
-      { x: index * @options.dx, y: position * 20 }
+      { x: index * @options.dx, y: position * @options.path_height }
 
     _position_change: (positions, index) ->
       positions[index] != positions[index - 1]

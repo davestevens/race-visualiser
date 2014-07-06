@@ -21,6 +21,7 @@ define [
 
     options:
       horizontal_padding: 30
+      path_height: 20
 
     _style: -> new Style()
 
@@ -36,8 +37,9 @@ define [
         data: @collection
         dx: @_dx()
         horizontal_padding: @options.horizontal_padding
+        path_height: @options.path_height
 
     _width: -> @options.width - (2 * @options.horizontal_padding)
-    _height: -> @collection.length * @options.path_height
+    _height: -> (@collection.length + 1) * @options.path_height
 
     _dx: -> @_width() / @splits
