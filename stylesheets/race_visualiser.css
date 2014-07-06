@@ -1,0 +1,22 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: Helvetica, sans-serif;
+  text-align: center;
+}
+
+#race_visualiser {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#paths, #labels {
+  float: left;
+}
+
+#labels ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
