@@ -12,5 +12,5 @@ define ["underscore", "lib/svg"], (_, Svg) ->
       styles: [
         "#paths path { opacity: 0.6; }"
         "#paths:hover path { opacity: 0.3; }"
-        "#paths path:hover { opacity: 1; stroke-width: 6px; }"
+        "#paths path:hover { opacity: 1; stroke-width: 6px; cursor: pointer }"
       ]
