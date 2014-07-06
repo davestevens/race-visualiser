@@ -15,7 +15,7 @@ define [
 
       svg.appendChild(@_style().build())
       svg.appendChild(@_markers().build())
-      svg.appendChild(@_paths().build())
+      svg.appendChild(@_paths().build(start, end))
 
       @$el.html(svg)
 

@@ -4,13 +4,17 @@ define ["underscore", "lib/svg"], (_, Svg) ->
 
     options: {}
 
-    build: ->
+    build: (start, end) ->
       attributes = { id: "paths" }
       styles = { strokeWidth: "3px", fill: "none" }
 
+      positions_selection = _.map(@options.data, (datum) ->
+        datum.positions[start..end]
+      )
+
       paths_group = Svg.element("g", attributes, styles)
       _.tap(paths_group, (element) =>
-        element.appendChild(@_path(a.positions)) for a in @options.data
+        element.appendChild(@_path(item)) for item in positions_selection
       )
 
     _path: (positions) ->
