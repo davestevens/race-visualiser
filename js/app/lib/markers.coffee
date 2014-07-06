@@ -2,8 +2,7 @@ define ["underscore", "lib/svg"], (_, Svg) ->
   class Markers
     constructor: (options) -> _.extend(@options, options)
 
-    options:
-      horizontal_padding: 30
+    options: {}
 
     build: ->
       attributes = { id: "markers" }
@@ -15,9 +14,7 @@ define ["underscore", "lib/svg"], (_, Svg) ->
       )
 
     _marker: (index) ->
-      x = ((@_width() / @options.splits) * index) + @options.horizontal_padding
+      x = (@options.dx * index) + @options.horizontal_padding
       attributes = { x1: x, y1: 0, x2: x, y2: @options.height }
 
       Svg.element("line", attributes)
-
-    _width: -> @options.width - (2 * @options.horizontal_padding)
