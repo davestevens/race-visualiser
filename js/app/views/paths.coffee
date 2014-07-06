@@ -12,14 +12,14 @@ define [
 
     render: (start, end) ->
       @splits = end - start
-      svg = Svg.element("svg", width: @options.width, height: @_height())
+      svg = Svg.element("svg", width: @options.width, height: @options.height)
 
-      svg.appendChild(@_style().build())
-      svg.appendChild(@_markers().build())
-      svg.appendChild(@_paths().build(start, end))
-      svg.appendChild(@_position_markers().build(start, end))
-
-      @$el.html(svg)
+      _.tap(svg, (element) =>
+        element.appendChild(@_style().build())
+        element.appendChild(@_markers().build())
+        element.appendChild(@_paths().build(start, end))
+        element.appendChild(@_position_markers().build(start, end))
+      )
 
     options:
       horizontal_padding: 30
@@ -30,7 +30,7 @@ define [
     _markers: ->
       new Markers
         splits: @splits
-        height: @_height()
+        height: @options.height
         dx: @_dx()
         horizontal_padding: @options.horizontal_padding
 
@@ -49,6 +49,5 @@ define [
         path_height: @options.path_height
 
     _width: -> @options.width - (2 * @options.horizontal_padding)
-    _height: -> (@collection.length + 1) * @options.path_height
 
     _dx: -> @_width() / @splits

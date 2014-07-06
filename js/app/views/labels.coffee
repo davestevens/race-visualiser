@@ -1,4 +1,4 @@
-define ["backbone"], (Backbone) ->
+define ["backbone", "lib/svg"], (Backbone, Svg) ->
   LabelsView = Backbone.View.extend
     initialize: (options) -> _.extend(@options, options)
 
@@ -6,18 +6,23 @@ define ["backbone"], (Backbone) ->
       path_height: 20
 
     render: (index) ->
-      $ordered_list = $("<ol/>"
-        style: "padding-top:#{@options.path_height / 2}px"
-      )
+      attributes =
+        width: @options.width
+        height: @options.height
+        x: @options.x_offset
 
+      svg = Svg.element("svg", attributes)
       _.chain( @collection )
         .sortBy( (item) -> item.positions[index] )
-        .each( (item) => $ordered_list.append(@_render_item(item)) )
+        .each( (item, index) => svg.appendChild(@_render_item(item, index)) )
+      svg
 
-      @$el.html($ordered_list)
+    _render_item: (item, index) ->
+      attributes = { x: 2,  y: @_y_offset(index) }
+      styles = { dominantBaseline: "middle" }
 
-    _render_item: (item) ->
-      $("<li/>"
-        style: "line-height:#{@options.path_height}px"
-        text: item.label
+      _.tap(Svg.element("text", attributes, styles), (element) ->
+        element.textContent = item.label
       )
+
+    _y_offset: (index) -> @options.path_height + (@options.path_height * index)
