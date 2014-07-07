@@ -1,64 +1,31 @@
-define ["underscore", "lib/svg"], (_, Svg) ->
+define ["lib/svg"], (Svg) ->
   class PositionMarkers
-    constructor: (options) -> _.extend(@options, options)
+    constructor: (options) ->
+      _.extend(@options, options)
+      @group = Svg.element("g", class: "positions", fill: "black")
 
-    options: {}
+    options:
+      size: 10
 
-    build: (start, end) ->
-      attributes = { id: "position_markers" }
-
-      positions_selection = _.map(@options.data, (datum) ->
-        positions: datum.positions[start..end]
-        count: end - start
-        id: datum.id
+    build: (point, label) ->
+      marker = _.tap(Svg.element("g"), (element) =>
+        element.appendChild(@_marker(point))
+        element.appendChild(@_text(point, label))
       )
-
-      position_markers_group = Svg.element("g", attributes)
-      _.tap(position_markers_group, (element) =>
-        element.appendChild(@_markers(item)) for item in positions_selection
-      )
-
-    _markers: (options) ->
-      positions = options.positions
-      length = positions.length
-
-      group = Svg.element("g", { visibility: "hidden" })
-      _.tap(group, (element) =>
-        for index in [1...length]
-          if @_position_change(positions, index)
-            point = @_position_to_coord(index, positions[index])
-            element.appendChild(@_marker(point))
-            element.appendChild(@_marker_text(point, positions[index]))
-
-        attributes =
-          attributeName: "visibility"
-          from: "hidden"
-          to: "visible"
-          begin: "#{options.id}.mouseover"
-          end: "#{options.id}.mouseout"
-
-        element.appendChild(Svg.element("set", attributes))
-      )
-
-    _position_to_coord: (index, position) ->
-      { x: index * @options.dx, y: position * @options.path_height }
-
-    _position_change: (positions, index) ->
-      positions[index] != positions[index - 1]
+      @group.appendChild(marker)
 
     _marker: (point) ->
       attributes =
         cx: point.x + @options.horizontal_padding
         cy: point.y
-        r: 10
+        r: @options.size
       styles =
-        stroke: "#8D8D8D"
         strokeWidth: "1px"
         fill: "white"
 
       Svg.element("circle", attributes, styles)
 
-    _marker_text: (point, text) ->
+    _text: (point, label) ->
       attributes =
         x: point.x + @options.horizontal_padding
         y: point.y
@@ -66,7 +33,9 @@ define ["underscore", "lib/svg"], (_, Svg) ->
         fontSize: "15px"
         textAnchor: "middle"
         dominantBaseline: "central"
+        stroke: "black"
+        strokeWidth: "0.5px";
 
-      _.tap(Svg.element("text", attributes, styles), (element) ->
-        element.textContent = text
+      _.tap(Svg.element("text", attributes, styles), (element) =>
+        element.textContent = label
       )

@@ -1,9 +1,10 @@
 define [
   "backbone"
   "lib/svg"
+  "lib/style"
   "views/paths"
   "views/labels"
-], (Backbone, Svg, PathsView, LabelsView) ->
+], (Backbone, Svg, Style, PathsView, LabelsView) ->
   RaceVisualiser = Backbone.View.extend
     initialize: (options = {}) ->
       _.extend(@options, options)
@@ -11,13 +12,12 @@ define [
 
       throw new Error "Please define data" unless @data
 
-      _.each(@data.data, (datum, index) -> datum.id = "d#{index}")
-
     render: (options = {}) ->
       start = @options.start || 0
       end = @options.end || (@data.splits * @data.laps)
 
       svg = Svg.element("svg", width: @_calculate_width(), height: @_height())
+      svg.appendChild(@_style().build())
 
       paths_view = new PathsView
         collection: @data.data
@@ -48,3 +48,5 @@ define [
 
     # Using .offsetWidth or .width() returns a rounded pixel value
     _calculate_width: -> Math.floor(@el.getBoundingClientRect().width)
+
+    _style: -> new Style()
