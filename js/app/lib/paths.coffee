@@ -40,15 +40,29 @@ define [
           markers.build(point_b, positions[index])
 
       end = @_position_to_coord(length - 1, positions[length - 1])
-      end_x = options.count * @options.dx
-      path += "L#{end_x + (2 * @options.horizontal_padding)},#{end.y}"
-      # TODO: display when non-finisher (create a non-finish marker?)
+      if (length - 1) == options.count
+        end_x = end.x + (2 * @options.horizontal_padding)
+      else
+        end_x = end.x + (1 * @options.horizontal_padding)
+        finish_path = @_dnf_path(options.count, end)
+
+      path += "L#{end_x},#{end.y}"
       markers.build(end, positions[length - 1])
 
       _.tap(Svg.element("g", null, stroke: "#8D8D8D"), (group) ->
-        group.appendChild(Svg.element("path", d: path))
+        group.appendChild(Svg.element("path", d: path, class: "path"))
+        group.appendChild(finish_path) if finish_path
         group.appendChild(markers.group)
       )
+
+    _dnf_path: (count, end) ->
+      a = (count * @options.dx) + (2 * @options.horizontal_padding)
+      end_x = end.x + (1 * @options.horizontal_padding)
+
+      attributes = { d: "M#{end_x},#{end.y}L#{a},#{end.y}", class: "dnf" }
+      styles = { strokeDasharray: "10,5" }
+
+      Svg.element("path", attributes, styles)
 
     _position_to_coord: (index, position) ->
       { x: index * @options.dx, y: position * @options.path_height }
