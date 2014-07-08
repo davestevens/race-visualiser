@@ -1,9 +1,7 @@
-define ["underscore", "lib/svg"], (_, Svg) ->
+define ["underscore", "lib/options", "lib/svg"], (_, Options, Svg) ->
   class Markers
-    constructor: (options) -> _.extend(@options, options)
-
-    options:
-      big_tick: 4
+    constructor: (options) ->
+      @options = options
 
     build: (ticks) ->
       attributes = { id: "markers" }
@@ -15,8 +13,8 @@ define ["underscore", "lib/svg"], (_, Svg) ->
       )
 
     _marker: (index) ->
-      x = (@options.dx * index) + @options.horizontal_padding
+      x = (@options.dx * index) + Options.horizontal_padding
       attributes = { x1: x, y1: 0, x2: x, y2: @options.height }
-      styles = { strokeWidth: "2px" } unless (index % @options.big_tick)
+      styles = { strokeWidth: "2px" } unless (index % Options.big_tick)
 
       Svg.element("line", attributes, styles)

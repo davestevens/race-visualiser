@@ -1,9 +1,7 @@
-define ["backbone", "lib/svg"], (Backbone, Svg) ->
+define ["backbone", "lib/options", "lib/svg"], (Backbone, Options, Svg) ->
   LabelsView = Backbone.View.extend
-    initialize: (options) -> _.extend(@options, options)
-
-    options:
-      path_height: 20
+    initialize: (options) ->
+      @options = options
 
     render: (index) ->
       attributes =
@@ -25,4 +23,4 @@ define ["backbone", "lib/svg"], (Backbone, Svg) ->
         element.textContent = item.label
       )
 
-    _y_offset: (index) -> @options.path_height + (@options.path_height * index)
+    _y_offset: (index) -> Options.path_height + (Options.path_height * index)

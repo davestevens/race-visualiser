@@ -1,11 +1,7 @@
-define ["lib/svg"], (Svg) ->
+define ["lib/options", "lib/svg"], (Options, Svg) ->
   class PositionMarkers
-    constructor: (options) ->
-      _.extend(@options, options)
+    constructor: ->
       @group = Svg.element("g", class: "positions", fill: "black")
-
-    options:
-      size: 10
 
     build: (point, label) ->
       marker = _.tap(Svg.element("g"), (element) =>
@@ -16,9 +12,9 @@ define ["lib/svg"], (Svg) ->
 
     _marker: (point) ->
       attributes =
-        cx: point.x + @options.horizontal_padding
+        cx: point.x + Options.horizontal_padding
         cy: point.y
-        r: @options.size
+        r: Options.position_marker_size
       styles =
         strokeWidth: "1px"
         fill: "white"
@@ -27,7 +23,7 @@ define ["lib/svg"], (Svg) ->
 
     _text: (point, label) ->
       attributes =
-        x: point.x + @options.horizontal_padding
+        x: point.x + Options.horizontal_padding
         y: point.y
       styles =
         fontSize: "15px"

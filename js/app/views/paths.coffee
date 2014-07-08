@@ -1,13 +1,14 @@
 define [
   "backbone"
+  "lib/options"
   "lib/svg"
   "lib/style"
   "lib/markers"
   "lib/paths"
-], (Backbone, Svg, Style, Markers, Paths) ->
+], (Backbone, Options, Svg, Style, Markers, Paths) ->
   PathsView = Backbone.View.extend
     initialize: (options = {}) ->
-      _.extend(@options, options)
+      @options = options
 
     render: (start, end) ->
       @splits = end - start
@@ -18,24 +19,17 @@ define [
         element.appendChild(@_paths().build(start, end))
       )
 
-    options:
-      horizontal_padding: 30
-      path_height: 20
-
     _markers: ->
       new Markers
         splits: @splits
         height: @options.height
         dx: @_dx()
-        horizontal_padding: @options.horizontal_padding
 
     _paths: ->
       new Paths
         data: @collection
         dx: @_dx()
-        horizontal_padding: @options.horizontal_padding
-        path_height: @options.path_height
 
-    _width: -> @options.width - (2 * @options.horizontal_padding)
+    _width: -> @options.width - (2 * Options.horizontal_padding)
 
     _dx: -> @_width() / @splits

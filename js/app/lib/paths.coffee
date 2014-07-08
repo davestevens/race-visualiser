@@ -1,12 +1,12 @@
 define [
   "underscore"
+  "lib/options"
   "lib/svg"
   "lib/position_markers"
-], (_, Svg, PositionMarkers) ->
+], (_, Options, Svg, PositionMarkers) ->
   class Paths
-    constructor: (options) -> _.extend(@options, options)
-
-    options: {}
+    constructor: (options) ->
+      @options = options
 
     build: (start, end) ->
       attributes = { id: "paths" }
@@ -24,8 +24,7 @@ define [
     _path: (options) ->
       positions = options.positions
       length = positions.length
-      markers = new PositionMarkers
-        horizontal_padding: @options.horizontal_padding
+      markers = new PositionMarkers()
 
       start = @_position_to_coord(0, positions[0])
       path = "M#{start.x},#{start.y}"
@@ -41,9 +40,9 @@ define [
 
       end = @_position_to_coord(length - 1, positions[length - 1])
       if (length - 1) == options.count
-        end_x = end.x + (2 * @options.horizontal_padding)
+        end_x = end.x + (2 * Options.horizontal_padding)
       else
-        end_x = end.x + (1 * @options.horizontal_padding)
+        end_x = end.x + (1 * Options.horizontal_padding)
         finish_path = @_dnf_path(options.count, end)
 
       path += "L#{end_x},#{end.y}"
@@ -56,8 +55,8 @@ define [
       )
 
     _dnf_path: (count, end) ->
-      a = (count * @options.dx) + (2 * @options.horizontal_padding)
-      end_x = end.x + (1 * @options.horizontal_padding)
+      a = (count * @options.dx) + (2 * Options.horizontal_padding)
+      end_x = end.x + (1 * Options.horizontal_padding)
 
       attributes = { d: "M#{end_x},#{end.y}L#{a},#{end.y}", class: "dnf" }
       styles = { strokeDasharray: "10,5" }
@@ -65,10 +64,10 @@ define [
       Svg.element("path", attributes, styles)
 
     _position_to_coord: (index, position) ->
-      { x: index * @options.dx, y: position * @options.path_height }
+      { x: index * @options.dx, y: position * Options.path_height }
 
     _position_change: (positions, index) ->
       positions[index] != positions[index - 1]
 
     _curve: (a, b, index) ->
-      Svg.line_to_curve(a, b, { x: @options.horizontal_padding })
+      Svg.line_to_curve(a, b, { x: Options.horizontal_padding })
