@@ -26,11 +26,11 @@ define ["lib/options", "lib/svg"], (Options, Svg) ->
         x: point.x + Options.horizontal_padding
         y: point.y
       styles =
-        fontSize: "15px"
+        fontSize: "14px"
         textAnchor: "middle"
-        dominantBaseline: "central"
+        dominantBaseline: "middle"
         stroke: "black"
-        strokeWidth: "0.5px";
+        strokeWidth: "0";
 
       _.tap(Svg.element("text", attributes, styles), (element) =>
         element.textContent = label
