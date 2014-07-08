@@ -4,25 +4,12 @@ define [
   "lib/svg"
   "lib/position_markers"
 ], (_, Options, Svg, PositionMarkers) ->
-  class Paths
+  class Path
     constructor: (options) ->
       @options = options
 
-    build: (start, end) ->
-      attributes = { id: "paths" }
-      styles = { strokeWidth: "3px", fill: "none" }
-
-      positions_selection = _.map(@options.data, (datum) ->
-        positions: datum.positions[start..end]
-        count: end - start
-      )
-
-      _.tap(Svg.element("g", attributes, styles), (element) =>
-        element.appendChild(@_path(item)) for item in positions_selection
-      )
-
-    _path: (options) ->
-      positions = options.positions
+    build: (racer) ->
+      positions = racer.positions
       length = positions.length
       markers = new PositionMarkers()
 
@@ -39,11 +26,11 @@ define [
           markers.build(point_b, positions[index])
 
       end = @_position_to_coord(length - 1, positions[length - 1])
-      if (length - 1) == options.count
+      if (length - 1) == @options.split_count
         end_x = end.x + (2 * Options.horizontal_padding)
       else
         end_x = end.x + (1 * Options.horizontal_padding)
-        finish_path = @_dnf_path(options.count, end)
+        finish_path = @_dnf_path(@options.split_count, end)
 
       path += "L#{end_x},#{end.y}"
       markers.build(end, positions[length - 1])

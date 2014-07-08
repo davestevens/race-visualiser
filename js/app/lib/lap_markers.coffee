@@ -1,14 +1,14 @@
 define ["underscore", "lib/options", "lib/svg"], (_, Options, Svg) ->
-  class Markers
+  class LapMarkers
     constructor: (options) ->
       @options = options
 
     build: (ticks) ->
-      attributes = { id: "markers" }
+      attributes = { id: "lap_markers" }
       styles = { stroke: "#8D8D8D", strokeWidth: "1px", opacity: 0.5 }
 
-      markers_group = Svg.element("g", attributes, styles)
-      _.tap(markers_group, (element) =>
+      lap_markers_group = Svg.element("g", attributes, styles)
+      _.tap(lap_markers_group, (element) =>
         element.appendChild(@_marker(marker)) for marker in [0..@options.splits]
       )
 

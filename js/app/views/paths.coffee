@@ -1,34 +1,23 @@
-define [
-  "lib/options"
-  "lib/svg"
-  "lib/style"
-  "lib/markers"
-  "lib/paths"
-], (Options, Svg, Style, Markers, Paths) ->
+define ["lib/options", "lib/svg", "lib/path"], (Options, Svg, Path) ->
   class PathsView
-    constructor: (options = {}) ->
+    constructor: (options) ->
       @options = options
+      @racers = @_initialize_data()
 
-    render: (start, end) ->
-      @splits = end - start
-      svg = Svg.element("svg", width: @options.width, height: @options.height)
+    render: ->
+      attributes = { id: "paths" }
+      styles = { strokeWidth: "3px", fill: "none" }
+      path_builder = new Path(dx: @options.dx, split_count: @_count())
 
-      _.tap(svg, (element) =>
-        element.appendChild(@_markers().build())
-        element.appendChild(@_paths().build(start, end))
+      _.tap(Svg.element("g", attributes, styles), (element) =>
+        _.each(@racers, (racer) =>
+          element.appendChild(path_builder.build(racer))
+        )
       )
 
-    _markers: ->
-      new Markers
-        splits: @splits
-        height: @options.height
-        dx: @_dx()
+    _initialize_data: ->
+      _.map(@options.data, (datum) =>
+        positions: datum.positions[@options.start..@options.end]
+      )
 
-    _paths: ->
-      new Paths
-        data: @options.collection
-        dx: @_dx()
-
-    _width: -> @options.width - (2 * Options.horizontal_padding)
-
-    _dx: -> @_width() / @splits
+    _count: -> @options.end - @options.start

@@ -2,9 +2,9 @@ define [
   "lib/options"
   "lib/svg"
   "lib/style"
-  "views/paths"
-  "views/labels"
-], (Options, Svg, Style, PathsView, LabelsView) ->
+  "views/race"
+  "views/racers"
+], (Options, Svg, Style, RaceView, RacersView) ->
   class RaceVisualiser
     constructor: (params) ->
       _.extend(Options, params.options)
@@ -20,19 +20,19 @@ define [
       svg = Svg.element("svg", width: @_calculate_width(), height: @_height())
       svg.appendChild(@_style().build())
 
-      svg.appendChild(@_paths_view().render(start, end))
-      svg.appendChild(@_labels_view().render(end))
+      svg.appendChild(@_race_view().render(start, end))
+      svg.appendChild(@_racers_view().render(end))
 
       @el.appendChild(svg)
 
-    _paths_view: ->
-      @paths_view ||= new PathsView
+    _race_view: ->
+      @paths_view ||= new RaceView
         collection: @data.data
         width: @_width()
         height: @_height()
 
-    _labels_view: ->
-      @labels_view ||= new LabelsView
+    _racers_view: ->
+      @labels_view ||= new RacersView
         collection: @data.data
         width: Options.labels_width
         height: @_height()
