@@ -9,7 +9,7 @@ define [
     constructor: (params) ->
       _.extend(Options, params.options)
       @data = params.data
-      @$el = $(params.el)
+      @el = params.el
 
       throw new Error "Please define data" unless @data
 
@@ -23,7 +23,7 @@ define [
       svg.appendChild(@_paths_view().render(start, end))
       svg.appendChild(@_labels_view().render(end))
 
-      @$el.html(svg)
+      @el.appendChild(svg)
 
     _paths_view: ->
       @paths_view ||= new PathsView
@@ -42,6 +42,6 @@ define [
     _height: -> (@data.data.length + 1) * Options.path_height
 
     # Using .offsetWidth or .width() returns a rounded pixel value
-    _calculate_width: -> Math.floor(@$el[0].getBoundingClientRect().width)
+    _calculate_width: -> Math.floor(@el.getBoundingClientRect().width)
 
     _style: -> new Style()
