@@ -1,15 +1,15 @@
 define [
-  "backbone"
   "lib/options"
   "lib/svg"
   "lib/style"
   "views/paths"
   "views/labels"
-], (Backbone, Options, Svg, Style, PathsView, LabelsView) ->
-  RaceVisualiser = Backbone.View.extend
-    initialize: (params) ->
+], (Options, Svg, Style, PathsView, LabelsView) ->
+  class RaceVisualiser
+    constructor: (params) ->
       _.extend(Options, params.options)
       @data = params.data
+      @$el = $(params.el)
 
       throw new Error "Please define data" unless @data
 
@@ -42,6 +42,6 @@ define [
     _height: -> (@data.data.length + 1) * Options.path_height
 
     # Using .offsetWidth or .width() returns a rounded pixel value
-    _calculate_width: -> Math.floor(@el.getBoundingClientRect().width)
+    _calculate_width: -> Math.floor(@$el[0].getBoundingClientRect().width)
 
     _style: -> new Style()

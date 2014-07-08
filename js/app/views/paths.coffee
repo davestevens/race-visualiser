@@ -1,13 +1,12 @@
 define [
-  "backbone"
   "lib/options"
   "lib/svg"
   "lib/style"
   "lib/markers"
   "lib/paths"
-], (Backbone, Options, Svg, Style, Markers, Paths) ->
-  PathsView = Backbone.View.extend
-    initialize: (options = {}) ->
+], (Options, Svg, Style, Markers, Paths) ->
+  class PathsView
+    constructor: (options = {}) ->
       @options = options
 
     render: (start, end) ->
@@ -27,7 +26,7 @@ define [
 
     _paths: ->
       new Paths
-        data: @collection
+        data: @options.collection
         dx: @_dx()
 
     _width: -> @options.width - (2 * Options.horizontal_padding)

@@ -1,6 +1,6 @@
-define ["backbone", "lib/options", "lib/svg"], (Backbone, Options, Svg) ->
-  LabelsView = Backbone.View.extend
-    initialize: (options) ->
+define ["lib/options", "lib/svg"], (Options, Svg) ->
+  class LabelsView
+    constructor: (options) ->
       @options = options
 
     render: (index) ->
@@ -10,7 +10,7 @@ define ["backbone", "lib/options", "lib/svg"], (Backbone, Options, Svg) ->
         x: @options.x_offset
 
       svg = Svg.element("svg", attributes)
-      _.chain( @collection )
+      _.chain( @options.collection )
         .sortBy( (item) -> item.positions[index] )
         .each( (item, index) => svg.appendChild(@_render_item(item, index)) )
       svg
