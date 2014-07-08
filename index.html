@@ -10,6 +10,14 @@
     <div id="race_visualiser"></div>
 
     <script src="data/example.js"></script>
-    <script data-main="js/main" src="js/lib/require.js"></script>
+    <script src="dist/race_visualiser.min.js"/></script>
+    <script>
+      var race_visualiser;
+      race_visualiser = new RaceVisualiser({
+        el: document.getElementById("race_visualiser"),
+        data: data
+      });
+      race_visualiser.render();
+    </script>
   </body>
 </html>

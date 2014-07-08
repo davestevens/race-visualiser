@@ -1,7 +1,6 @@
 requirejs.config
-  baseUrl: "js/app"
   paths:
-    underscore: "../lib/underscore"
+    underscore: "../node_modules/underscore/underscore"
   shim:
     underscore: { exports: "_" }
 
