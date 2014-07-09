@@ -25,10 +25,10 @@ define ["lib/options", "lib/svg"], (Options, Svg) ->
       attributes =
         x: point.x + Options.horizontal_padding
         y: point.y
+        dy: "0.3em"
       styles =
         fontSize: "14px"
         textAnchor: "middle"
-        dominantBaseline: "middle"
         stroke: "black"
         strokeWidth: "0";
 

@@ -16,10 +16,9 @@ define ["lib/options", "lib/svg"], (Options, Svg) ->
       svg
 
     _render_item: (item, index) ->
-      attributes = { x: 2,  y: @_y_offset(index) }
-      styles = { dominantBaseline: "middle" }
+      attributes = { x: 2,  y: @_y_offset(index), dy: "0.3em" }
 
-      _.tap(Svg.element("text", attributes, styles), (element) ->
+      _.tap(Svg.element("text", attributes), (element) ->
         element.textContent = item.label
       )
 
