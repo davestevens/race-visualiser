@@ -2,8 +2,39 @@
 
 Display Race data in interactive graph
 
-## Compile RequireJS
-`npm install requirejs`
-`r.js -o build.js` (Use `optimize=none` for non compressed output)
-Creates `race_visuliazer.js` in `/build` directory
-Replace `data-main` to point at this file instead
+## Dependencies
+- Underscore.js
+ - Helper functions
+- RequireJS
+ - Organisation
+ - Optimiser
+- Almond
+ - Builds stand alone module
+- Grunt
+
+Run `npm install` to install all required dependencies
+
+## TODO
+- [] Bring Racer path to front on hover
+- [] Display Lap/Split Markers
+- [] Controls View
+ - [] Display data from Start to End (zoom)
+ - [] Lap Markers (on/off)
+ - [] Position Markers (on/off, default to off if `dx` < `position_marker_size`)
+- [] Set colour for each Racer (predefined or auto generated?)
+
+## Usage
+Can be used as either AMD module or standalone js file.
+
+## Compile
+`grunt requirejs:compile`
+Produce minified standalone file `dist/race_visualiser.min.js`.
+
+`grunt requirejs:dev`
+Produce `dist/race_visualiser.js`.
+
+`grunt coffee`
+Compile all CoffeeScript files within `app/` into `js/` directory.
+
+`grunt watch`
+Watch CoffeeScript files and run `grunt coffee` when modified.
