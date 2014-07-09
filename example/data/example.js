@@ -3,7 +3,7 @@ var data = {
   "laps": 4,
   "data": [
     {
-      "label": "Dani Pedrosa",
+      "label": "Racer 1",
       "positions": [
         1,
         2, 3, 3, 3,
@@ -13,7 +13,7 @@ var data = {
       ]
     },
     {
-      "label": "Jorge Lorenzo",
+      "label": "Racer 2",
       "positions": [
         2,
         1, 1, 1, 1,
@@ -23,16 +23,17 @@ var data = {
       ]
     },
     {
-      "label": "Marc Marquez",
+      "label": "Racer 3",
       "positions": [
         3,
         4, 4, 4, 4,
         3, 3, 3, 3,
         3, 3, 3, 3,
-        3, 3, 3, 2]
+        3, 3, 3, 2
+      ]
     },
     {
-      "label": "Stefan Bradl",
+      "label": "Racer 4",
       "positions": [
         4,
         5, 5, 5, 5,
@@ -41,7 +42,7 @@ var data = {
       ]
     },
     {
-      "label": "Valentino Rossi",
+      "label": "Racer 5",
       "positions": [
         5,
         3, 2, 2, 2,
