@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      html, body {
-        padding: 0;
-        margin: 0;
-        font-family: Helvetica, sans-serif;
-        text-align: center;
-      }
-
-      #race-visualiser {
-        width: 90%;
-        margin: 0 auto;
-      }
-    </style>
+    <title>Race Visualiser Example</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/race_visualiser.css" />
   </head>
 
   <body>
     <h1>Race Visualiser Example</h1>
-    <div id="race-visualiser"></div>
+    <div id="race_visualiser"></div>
 
     <script src="data/example.js"></script>
-    <script src="js/race-visualiser.js"></script>
+    <script src="dist/race_visualiser.min.js"/></script>
+    <script>
+      var race_visualiser;
+      race_visualiser = new RaceVisualiser({
+        el: document.getElementById("race_visualiser"),
+        data: data
+      });
+      race_visualiser.render();
+    </script>
   </body>
 </html>

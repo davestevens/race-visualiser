@@ -1,0 +1,19 @@
+{
+  "name": "RaceVisualiser",
+  "version": "0.1.0",
+
+  "dependencies": {
+    "underscore": "1.6.0"
+  },
+
+  "devDependencies": {
+    "requirejs": "2.1.14",
+    "almond": "~0.2.9",
+    "grunt": "~0.4.1",
+    "minimatch": "0.2.11",
+
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-watch": "~0.4.3",
+    "grunt-contrib-requirejs": "~0.4.4"
+  }
+}
