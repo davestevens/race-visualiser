@@ -1,9 +1,10 @@
 var data = {
   "splits": 4,
   "laps": 4,
-  "data": [
+  "racers": [
     {
       "label": "Racer 1",
+      "colour": "#ff0000",
       "positions": [
         1,
         2, 3, 3, 3,

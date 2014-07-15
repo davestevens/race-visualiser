@@ -2,9 +2,9 @@ define [
   "lib/options"
   "lib/svg"
   "lib/style"
+  "views/lap_markers"
   "views/race"
-  "views/racers"
-], (Options, Svg, Style, RaceView, RacersView) ->
+], (Options, Svg, Style, LapMarkersView, RaceView) ->
   class RaceVisualiser
     constructor: (params) ->
       _.extend(Options, params.options)
@@ -13,35 +13,50 @@ define [
 
       throw new Error "Please define data" unless @data
 
+      @_generate_ids()
+
     render: (options = {}) ->
       start = options.start || 0
       end = options.end || (@data.splits * @data.laps)
 
+      @splits = end - start
+
+      # TODO: check that it is a valid range...
+      @_sort_racers(end)
+      @el.appendChild(@build(start, end))
+
+     build: (start, end) ->
       svg = Svg.element("svg", width: @_calculate_width(), height: @_height())
-      svg.appendChild(@_style().build())
+      _.tap(svg, (element) =>
+        element.appendChild(@_style().build())
 
-      svg.appendChild(@_race_view().render(start, end))
-      svg.appendChild(@_racers_view().render(end))
+        element.appendChild(@_lap_markers().build())
+        element.appendChild(@_race(start, end).build())
+      )
 
-      @el.appendChild(svg)
+    _generate_ids: ->
+      _.each(@data.racers, (racer, index) -> racer.id = index)
 
-    _race_view: ->
-      @paths_view ||= new RaceView
-        collection: @data.data
-        width: @_width()
-        height: @_height()
+    _sort_racers: (index) ->
+      @data.racers = _.sortBy(@data.racers, (racer) -> racer.positions[index])
 
-    _racers_view: ->
-      @labels_view ||= new RacersView
-        collection: @data.data
-        width: Options.labels_width
-        height: @_height()
-        x_offset: @_width()
+    _style: -> new Style()
 
-    _width: -> (@width || @_calculate_width()) - Options.labels_width
-    _height: -> (@data.data.length + 1) * Options.path_height
+    _lap_markers: ->
+      new LapMarkersView(splits: @splits, height: @_height(), dx: @_dx())
+
+    _race: (start, end) ->
+      new RaceView(
+        width: @_width(), height: @_height(), dx: @_dx()
+        racers: @data.racers, start: start, end: end
+      )
+
+    _width: ->
+      (Options.width || @_calculate_width()) - Options.racer_label_width
+
+    _height: -> (@data.racers.length + 1) * Options.racer_path_height
+
+    _dx: -> (@_width() - (2 * Options.racer_path_x_padding)) / @splits
 
     # Using .offsetWidth or .width() returns a rounded pixel value
     _calculate_width: -> Math.floor(@el.getBoundingClientRect().width)
-
-    _style: -> new Style()

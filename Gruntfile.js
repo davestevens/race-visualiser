@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         nospawn: true
       },
       coffee: {
-        files: "**/*.coffee",
+        files: "app/**/*.coffee",
         tasks: ["coffee:compile"]
       }
     },
