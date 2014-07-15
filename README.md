@@ -15,7 +15,7 @@ Display Race data in interactive graph
 Run `npm install` to install all required dependencies
 
 ## TODO
-- [] Bring Racer path to front on hover
+- [x] Bring Racer path to front on hover
 - [] Display Lap/Split Markers
 - [] Controls View
  - [] Display data from Start to End (zoom)

@@ -14,14 +14,36 @@ define ["underscore", "lib/options", "lib/svg"], (_, Options, Svg) ->
     options:
       styles: [
         "svg { font-family: #{Options.font_family}; }"
-        "#lap_markers .marker { stroke-width: 1px; opacity: 0.5; stroke: #{Options.lap_marker_colour} }"
-        "#lap_markers .big { stroke-width: #{Options.lap_marker_big_tick_width}px; opacity: 0.7 }"
+        "#lap_markers .marker {" +
+          " stroke-width: 1px;" +
+          " opacity: 0.5;" +
+          " stroke: #{Options.lap_marker_colour}" +
+          "}"
+        "#lap_markers .big {" +
+          " opacity: 0.7;" +
+          " stroke-width: #{Options.lap_marker_big_tick_width}px" +
+          "}"
         "#paths { fill: none }"
-        "#paths .path { stroke-width: #{Options.racer_path_width}px; opacity: 0.6; }"
+        "#paths .path {" +
+          " stroke-width: #{Options.racer_path_width}px;" +
+          " opacity: 0.6;" +
+          "}"
         "#paths:hover .path { opacity: 0.3; }"
-        "#paths .path:hover { opacity: 1; stroke-width: #{Options.racer_path_width_highlight}px; cursor: pointer }"
+        "#paths .path.active {" +
+          " opacity: 1;" +
+          " cursor: pointer;" +
+          " stroke-width: #{Options.racer_path_width_highlight}px" +
+          "}"
         "#paths .path .dnf { stroke-dasharray: 10,5 }"
         "#positions .position { display: none; }"
-        "#positions .position .marker_text { font-size: 14px; text-anchor: middle; stroke: #000000; stroke-width: 0 }"
-        "#positions .position .marker_circle { stroke-width: 1px; fill: #FFFFFF }"
+        "#positions .position .marker_text {" +
+          " font-size: 14px;" +
+          " text-anchor: middle;" +
+          " stroke: #000000;" +
+          " stroke-width: 0" +
+          "}"
+        "#positions .position .marker_circle {" +
+          " stroke-width: 1px;" +
+          " fill: #FFFFFF" +
+          "}"
       ]

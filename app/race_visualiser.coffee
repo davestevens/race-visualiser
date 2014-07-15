@@ -1,10 +1,11 @@
 define [
+  "jquery"
   "lib/options"
   "lib/svg"
   "lib/style"
   "views/lap_markers"
   "views/race"
-], (Options, Svg, Style, LapMarkersView, RaceView) ->
+], ($, Options, Svg, Style, LapMarkersView, RaceView) ->
   class RaceVisualiser
     constructor: (params) ->
       _.extend(Options, params.options)
@@ -24,6 +25,7 @@ define [
       # TODO: check that it is a valid range...
       @_sort_racers(end)
       @el.appendChild(@build(start, end))
+      @_after_render()
 
      build: (start, end) ->
       svg = Svg.element("svg", width: @_calculate_width(), height: @_height())
@@ -39,6 +41,34 @@ define [
 
     _sort_racers: (index) ->
       @data.racers = _.sortBy(@data.racers, (racer) -> racer.positions[index])
+
+    _after_render: ->
+      _.bindAll(@, "_mouseover_path", "_mouseout_path")
+      $("#paths").bind("mouseover", ".path", @_mouseover_path)
+      $("#paths").bind("mouseout", ".path", @_mouseout_path)
+
+    _mouseover_path: (event) ->
+      $path = $(event.target).parent()
+      racer = $path.data("racer")
+
+      @_add_class($path, "active")
+      $path.parent().append($path)
+      $("#positions .#{racer}").show()
+
+    _mouseout_path: (event) ->
+      $path = $(event.target).parent()
+      racer = $path.data("racer")
+
+      @_remove_class($path, "active")
+      $("#positions .#{racer}").hide()
+
+    _add_class: ($element, class_name) ->
+      classes = "#{$element.attr('class')} active"
+      $element.attr("class", classes)
+
+    _remove_class: ($element, class_name) ->
+      classes = $element.attr("class").replace(class_name, "")
+      $element.attr("class", classes)
 
     _style: -> new Style()
 

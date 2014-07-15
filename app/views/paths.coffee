@@ -47,7 +47,9 @@ define ["lib/options", "lib/svg", "lib/utils"], (Options, Svg, Utils) ->
       unless @_has_finished(last_index)
         dnf_path = @_dnf(positions[last_index], last_index)
 
-      attributes = { class: "path racer_#{racer.id}" }
+      attributes =
+        class: "path racer_#{racer.id}"
+        "data-racer": "racer_#{racer.id}"
       style = { stroke: Utils.stroke_colour(racer) }
       _.tap(Svg.element("g", attributes, style), (element) ->
         element.appendChild(Svg.element("path", d: path))

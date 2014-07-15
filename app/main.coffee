@@ -1,8 +1,10 @@
 requirejs.config
   paths:
     underscore: "../node_modules/underscore/underscore"
+    jquery: "../node_modules/jquery/dist/jquery"
   shim:
     underscore: { exports: "_" }
+    jquery: { exports: "$" }
 
 require ["race_visualiser"], (RaceVisualiser) ->
   race_visualiser = new RaceVisualiser

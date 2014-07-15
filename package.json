@@ -3,7 +3,8 @@
   "version": "0.1.0",
 
   "dependencies": {
-    "underscore": "1.6.0"
+    "underscore": "1.6.0",
+    "jquery": "2.1.1"
   },
 
   "devDependencies": {
