@@ -6,11 +6,11 @@ define ["lib/options", "lib/svg"], (Options, Svg) ->
       @splits = options.splits
 
     build: ->
-      markers = @_markers
+      markers = @_markers()
       _.each([0..@splits], (index) => markers.appendChild(@_marker(index)))
       markers
 
-    _markers: Svg.element("g", id: "markers")
+    _markers: -> Svg.element("g", id: "markers")
 
     _marker: (index) ->
       x = (@dx * index) + Options.racer_path_x_padding

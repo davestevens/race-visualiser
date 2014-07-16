@@ -13,12 +13,12 @@ define [
       @dx = options.dx
 
     build: (ticks) ->
-      _.tap(@_lap_markers, (element) =>
+      _.tap(@_lap_markers(), (element) =>
         element.appendChild(@_markers().build())
         element.appendChild(@_numbers().build())
       )
 
-    _lap_markers: Svg.element("g", id: "lap_markers")
+    _lap_markers: -> Svg.element("g", id: "lap_markers")
 
     _markers: ->
       new LapMarkers(

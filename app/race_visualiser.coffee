@@ -5,7 +5,8 @@ define [
   "lib/style"
   "views/lap_markers"
   "views/race"
-], ($, Options, Svg, Style, LapMarkersView, RaceView) ->
+  "views/controls"
+], ($, Options, Svg, Style, LapMarkersView, RaceView, ControlsView) ->
   class RaceVisualiser
     constructor: (params) ->
       _.extend(Options, params.options)
@@ -17,24 +18,26 @@ define [
       @_generate_ids()
 
     render: (options = {}) ->
-      start = options.start || 0
-      end = options.end || (@data.splits * @data.laps)
+      @start = options.start || 0
+      @end = options.end || (@data.splits * @data.laps)
 
-      @splits = end - start
+      @_sort_racers(@end)
 
-      # TODO: check that it is a valid range...
-      @_sort_racers(end)
-      @el.appendChild(@build(start, end))
+      $(@el).html(@build())
+      $(@el).append(@_controls().render())
       @_after_render()
 
-     build: (start, end) ->
+     build: ->
+      @splits = @end - @start
+      throw new Error "Invalid start and end laps" if @splits <= 0
+
       svg = Svg.element("svg", width: @_calculate_width(),
         height: @_full_height())
       _.tap(svg, (element) =>
         element.appendChild(@_style().build())
 
-        element.appendChild(@_lap_markers(start, end).build())
-        element.appendChild(@_race(start, end).build())
+        element.appendChild(@_lap_markers().build())
+        element.appendChild(@_race().build())
       )
 
     _generate_ids: ->
@@ -43,10 +46,17 @@ define [
     _sort_racers: (index) ->
       @data.racers = _.sortBy(@data.racers, (racer) -> racer.positions[index])
 
+    _controls: ->
+      new ControlsView(
+        laps: @data.laps, splits: @data.splits
+        start: @start, end: @end
+      )
+
     _after_render: ->
-      _.bindAll(@, "_mouseover_path", "_mouseout_path")
+      _.bindAll(@, "_mouseover_path", "_mouseout_path", "_change_view")
       $("#paths").bind("mouseover", ".path", @_mouseover_path)
       $("#paths").bind("mouseout", ".path", @_mouseout_path)
+      $(".js-change-view").bind("click", @_change_view)
 
     _mouseover_path: (event) ->
       $path = $(event.target).parent()
@@ -63,6 +73,12 @@ define [
       @_remove_class($path, "active")
       $("#positions .#{racer}").hide()
 
+    _change_view: ->
+      start = +$(".js-start_lap").val()
+      end = +$(".js-end_lap").val()
+      return alert("Invalid Lap selection") if (start >= end)
+      @render(start: start, end: end)
+
     _add_class: ($element, class_name) ->
       classes = "#{$element.attr('class')} active"
       $element.attr("class", classes)
@@ -73,13 +89,15 @@ define [
 
     _style: -> new Style()
 
-    _lap_markers: (start, end) ->
-      new LapMarkersView(start: start, end: end, height: @_height(), dx: @_dx())
+    _lap_markers: ->
+      new LapMarkersView(
+        start: @start, end: @end, height: @_height(), dx: @_dx()
+      )
 
-    _race: (start, end) ->
+    _race: ->
       new RaceView(
         width: @_width(), height: @_height(), dx: @_dx()
-        racers: @data.racers, start: start, end: end
+        racers: @data.racers, start: @start, end: @end
       )
 
     _width: ->

@@ -7,14 +7,14 @@ define ["lib/options", "lib/svg"], (Options, Svg) ->
       @end = options.end
 
     build: ->
-      numbers = @_numbers
+      numbers = @_numbers()
       for index in [@start..@end] by Options.lap_marker_big_tick
         continue if index == 0
         label = index / Options.lap_marker_big_tick
         numbers.appendChild(@_number((index - @start), label))
       numbers
 
-    _numbers: Svg.element("g", id: "lap_number")
+    _numbers: -> Svg.element("g", id: "lap_number")
 
     _number: (index, label) ->
       x = (@dx * index) + Options.racer_path_x_padding

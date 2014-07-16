@@ -15,13 +15,13 @@ define [
       @dx = options.dx
 
     build: ->
-      _.tap(@_race, (element) =>
+      _.tap(@_race(), (element) =>
         element.appendChild(@_labels().build())
         element.appendChild(@_paths().build())
         element.appendChild(@_positions().build())
       )
 
-    _race: Svg.element("g", id: "race" )
+    _race: -> Svg.element("g", id: "race" )
 
     _labels: ->
       new LabelsView(
