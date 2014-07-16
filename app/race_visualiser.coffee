@@ -31,8 +31,8 @@ define [
       @splits = @end - @start
       throw new Error "Invalid start and end laps" if @splits <= 0
 
-      svg = Svg.element("svg", width: @_calculate_width(),
-        height: @_full_height())
+      attributes = { width: @_calculate_width(), height: @_full_height() }
+      svg = Svg.element("svg", attributes)
       _.tap(svg, (element) =>
         element.appendChild(@_style().build())
 

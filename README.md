@@ -18,11 +18,11 @@ Run `npm install` to install all required dependencies
 ## TODO
 - [x] Bring Racer path to front on hover
 - [x] Display Lap/Split Markers
-- [] Controls View
+- [ ] Controls View
  - [x] Display data from Start to End (zoom)
- - [] Lap Markers (on/off)
- - [] Position Markers (on/off, default to off if `dx` < `position_marker_size`)
-- [] Set colour for each Racer (predefined or auto generated?)
+ - [ ] Lap Markers (on/off)
+ - [ ] Position Markers (on/off, default to off if `dx` < `position_marker_size`)
+- [ ] Set colour for each Racer (predefined or auto generated?)
 
 ## Usage
 Can be used as either AMD module or standalone js file.
