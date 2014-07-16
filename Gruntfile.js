@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         nospawn: true
       },
       coffee: {
-        files: "**/*.coffee",
+        files: "app/**/*.coffee",
         tasks: ["coffee:compile"]
       }
     },
@@ -30,7 +30,8 @@ module.exports = function(grunt) {
         options: {
           baseUrl: "js",
           paths: {
-            underscore: "../node_modules/underscore/underscore"
+            underscore: "../node_modules/underscore/underscore",
+            jquery: "../node_modules/jquery/dist/jquery"
           },
           name: "../node_modules/almond/almond",
           include: "race_visualiser",
@@ -45,7 +46,8 @@ module.exports = function(grunt) {
         options: {
           baseUrl: "js",
           paths: {
-            underscore: "../node_modules/underscore/underscore"
+            underscore: "../node_modules/underscore/underscore",
+            jquery: "../node_modules/jquery/dist/jquery"
           },
           name: "../node_modules/almond/almond",
           include: "race_visualiser",

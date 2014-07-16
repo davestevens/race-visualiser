@@ -1,36 +1,44 @@
 define [
   "lib/options"
   "lib/svg"
-  "lib/style"
-  "lib/lap_markers"
+  "views/labels"
   "views/paths"
-], (Options, Svg, Style, LapMarkers, PathsView) ->
+  "views/positions"
+], (Options, Svg, LabelsView, PathsView, PositionsView) ->
   class RaceView
-    constructor: (options = {}) ->
-      @options = options
+    constructor: (options) ->
+      @racers = options.racers
+      @width = options.width
+      @height = options.height
+      @start = options.start
+      @end = options.end
+      @dx = options.dx
 
-    render: (start, end) ->
-      @splits = end - start
-      svg = Svg.element("svg", width: @options.width, height: @options.height)
-
-      _.tap(svg, (element) =>
-        element.appendChild(@_lap_markers().build())
-        element.appendChild(@_paths(start, end).render())
+    build: ->
+      _.tap(@_race(), (element) =>
+        element.appendChild(@_labels().build())
+        element.appendChild(@_paths().build())
+        element.appendChild(@_positions().build())
       )
 
-    _lap_markers: ->
-      new LapMarkers
-        splits: @splits
-        height: @options.height
-        dx: @_dx()
+    _race: -> Svg.element("g", id: "race" )
 
-    _paths: (start, end) ->
-      new PathsView
-        data: @options.collection
-        dx: @_dx()
-        start: start
-        end: end
+    _labels: ->
+      new LabelsView(
+        width: Options.racer_label_width, height: @height, x: @width
+        racers: @racers
+      )
 
-    _width: -> @options.width - (2 * Options.horizontal_padding)
+    _paths: ->
+      new PathsView(
+        width: @width, height: @height, dx: @dx
+        racers: @racers
+        start: @start, end: @end
+      )
 
-    _dx: -> @_width() / @splits
+    _positions: ->
+      new PositionsView(
+        width: @width, height: @height, dx: @dx
+        racers: @racers
+        start: @start, end: @end
+      )
