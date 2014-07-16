@@ -66,15 +66,10 @@ module.exports = function(grunt) {
             underscore: "../node_modules/underscore/underscore",
             jquery: "../node_modules/jquery/dist/jquery"
           },
-          name: "../node_modules/almond/almond",
-          include: "race_visualiser",
+          name: "race_visualiser",
           exclude: ["jquery", "underscore"],
           optimize: "none",
-          out: "dist/race_visualiser.bare.js",
-          wrap: {
-            startFile: "module_wrappers/wrap-start.frag.js",
-            endFile: "module_wrappers/wrap-end.frag.js"
-          }
+          out: "dist/race_visualiser.bare.js"
         }
       }
     }
@@ -94,5 +89,5 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask("default", ["coffee:compile"]);
-  grunt.registerTask("release", ["coffee:compile","requirejs:compile"]);
+  grunt.registerTask("release", ["coffee:compile","requirejs:compile", "requirejs:dev", "requirejs:bare"]);
 };
