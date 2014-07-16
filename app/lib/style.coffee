@@ -19,6 +19,12 @@ define ["underscore", "lib/options", "lib/svg"], (_, Options, Svg) ->
           " opacity: 0.5;" +
           " stroke: #{Options.lap_marker_colour}" +
           "}"
+        "#lap_markers .number {" +
+          " font-size: 14px;" +
+          " text-anchor: middle;" +
+          " stroke: #000000;" +
+          " stroke-width: 0" +
+          "}"
         "#lap_markers .big {" +
           " opacity: 0.7;" +
           " stroke-width: #{Options.lap_marker_big_tick_width}px" +

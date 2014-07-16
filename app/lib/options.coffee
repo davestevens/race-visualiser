@@ -3,6 +3,7 @@ define ["underscore"], (_) ->
     lap_marker_colour: "#8D8D8D"
     lap_marker_big_tick: 0
     lap_marker_big_tick_width: 2
+    lap_marker_label_height: 20
 
   RacerLabel =
     racer_label_width: 150

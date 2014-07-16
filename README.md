@@ -16,7 +16,7 @@ Run `npm install` to install all required dependencies
 
 ## TODO
 - [x] Bring Racer path to front on hover
-- [] Display Lap/Split Markers
+- [x] Display Lap/Split Markers
 - [] Controls View
  - [] Display data from Start to End (zoom)
  - [] Lap Markers (on/off)

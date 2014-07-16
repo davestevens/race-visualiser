@@ -28,11 +28,12 @@ define [
       @_after_render()
 
      build: (start, end) ->
-      svg = Svg.element("svg", width: @_calculate_width(), height: @_height())
+      svg = Svg.element("svg", width: @_calculate_width(),
+        height: @_full_height())
       _.tap(svg, (element) =>
         element.appendChild(@_style().build())
 
-        element.appendChild(@_lap_markers().build())
+        element.appendChild(@_lap_markers(start, end).build())
         element.appendChild(@_race(start, end).build())
       )
 
@@ -72,8 +73,8 @@ define [
 
     _style: -> new Style()
 
-    _lap_markers: ->
-      new LapMarkersView(splits: @splits, height: @_height(), dx: @_dx())
+    _lap_markers: (start, end) ->
+      new LapMarkersView(start: start, end: end, height: @_height(), dx: @_dx())
 
     _race: (start, end) ->
       new RaceView(
@@ -84,6 +85,7 @@ define [
     _width: ->
       (Options.width || @_calculate_width()) - Options.racer_label_width
 
+    _full_height: -> @_height() + Options.lap_marker_label_height
     _height: -> (@data.racers.length + 1) * Options.racer_path_height
 
     _dx: -> (@_width() - (2 * Options.racer_path_x_padding)) / @splits
