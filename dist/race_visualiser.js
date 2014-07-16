@@ -11702,17 +11702,17 @@ define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "view
     };
 
     RaceVisualiser.prototype.build = function() {
-      var svg,
+      var attributes, svg,
         _this = this;
       this.splits = this.end - this.start;
       if (this.splits <= 0) {
         throw new Error("Invalid start and end laps");
       }
-      svg = Svg.element("svg", {
-        width: this._calculate_width()
-      }, {
+      attributes = {
+        width: this._calculate_width(),
         height: this._full_height()
-      });
+      };
+      svg = Svg.element("svg", attributes);
       return _.tap(svg, function(element) {
         element.appendChild(_this._style().build());
         element.appendChild(_this._lap_markers().build());
