@@ -33,12 +33,18 @@ define ["lib/options", "lib/svg", "lib/utils"], (Options, Svg, Utils) ->
 
       Utils.curve(point_a, point_b, index + 1)
 
+    _get_positions: (positions) ->
+      _positions = positions[@start..@end]
+      if _.isEmpty(_positions)
+        return [positions[positions.length - 1]]
+      _positions
+
     _path: (racer) ->
-      positions = racer.positions[@start..@end]
+      positions = @_get_positions(racer.positions)
       path = @_start_path(positions[0])
 
       Utils.each_cons(positions, 2, ([a, b], index) =>
-        path += @_position_change(a, b, index) if a != b
+        path += @_position_change(a, b, index) if a != b && b?
       )
 
       last_index = positions.length - 1

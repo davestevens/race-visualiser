@@ -17,15 +17,20 @@ define ["lib/options", "lib/svg", "lib/utils"], (Options, Svg, Utils) ->
       attributes = { id: "positions", width: @width, height: @height }
       Svg.element("svg", attributes)
 
+    _get_positions: (positions) ->
+      _positions = positions[@start..@end]
+      return [positions[positions.length - 1]] if _.isEmpty(_positions)
+      _positions
+
     _markers: (racer) ->
       attributes = { class: "position racer_#{racer.id}" }
       styles = { stroke: Utils.stroke_colour(racer) }
       group = Svg.element("g", attributes, styles)
 
-      positions = racer.positions[@start..@end]
+      positions = @_get_positions(racer.positions)
 
       Utils.each_cons(positions, 2, ([a, b], index) =>
-        if a != b || index == 0
+        if a != b && b?
           group.appendChild(@_marker_and_text(index, positions))
       )
 
