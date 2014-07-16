@@ -29,9 +29,11 @@ define ["lib/options", "lib/svg", "lib/utils"], (Options, Svg, Utils) ->
 
       positions = @_get_positions(racer.positions)
 
+      group.appendChild(@_marker_and_text(0, positions))
+
       Utils.each_cons(positions, 2, ([a, b], index) =>
         if a != b && b?
-          group.appendChild(@_marker_and_text(index, positions))
+          group.appendChild(@_marker_and_text(index + 1, positions))
       )
 
       group.appendChild(@_marker_and_text(positions.length - 1, positions))
