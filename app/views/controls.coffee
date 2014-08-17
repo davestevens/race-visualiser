@@ -7,18 +7,18 @@ define ["jquery"], ($) ->
       @end = options.end
 
     render: ->
-      $("<div/>")
+      $("<div/>", class: "controls")
         .append(@_start_lap())
         .append(@_end_lap())
         .append(@_button())
 
     _start_lap: ->
-      $("<div/>")
+      $("<div/>", class: "start_lap")
         .append($("<label/>", text: "Start", for: "js-start_lap"))
         .append(@_select("js-start_lap").val(@start))
 
     _end_lap: ->
-      $("<div/>")
+      $("<div/>", class: "end_lap")
         .append($("<label/>", text: "End", for: "js-end_lap"))
         .append(@_select("js-end_lap").val(@end))
 

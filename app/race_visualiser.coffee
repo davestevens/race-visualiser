@@ -44,7 +44,9 @@ define [
       _.each(@data.racers, (racer, index) -> racer.id = index)
 
     _sort_racers: (index) ->
-      @data.racers = _.sortBy(@data.racers, (racer) -> racer.positions[index])
+      @data.racers = _.sortBy(@data.racers, (racer) ->
+        racer.positions[index] || racer.positions[-1..][0]
+      )
 
     _controls: ->
       new ControlsView(

@@ -11626,18 +11626,24 @@ define('views/controls',["jquery"], function($) {
     }
 
     ControlsView.prototype.render = function() {
-      return $("<div/>").append(this._start_lap()).append(this._end_lap()).append(this._button());
+      return $("<div/>", {
+        "class": "controls"
+      }).append(this._start_lap()).append(this._end_lap()).append(this._button());
     };
 
     ControlsView.prototype._start_lap = function() {
-      return $("<div/>").append($("<label/>", {
+      return $("<div/>", {
+        "class": "start_lap"
+      }).append($("<label/>", {
         text: "Start",
         "for": "js-start_lap"
       })).append(this._select("js-start_lap").val(this.start));
     };
 
     ControlsView.prototype._end_lap = function() {
-      return $("<div/>").append($("<label/>", {
+      return $("<div/>", {
+        "class": "end_lap"
+      }).append($("<label/>", {
         text: "End",
         "for": "js-end_lap"
       })).append(this._select("js-end_lap").val(this.end));
@@ -11728,7 +11734,7 @@ define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "view
 
     RaceVisualiser.prototype._sort_racers = function(index) {
       return this.data.racers = _.sortBy(this.data.racers, function(racer) {
-        return racer.positions[index];
+        return racer.positions[index] || racer.positions.slice(-1)[0];
       });
     };
 
