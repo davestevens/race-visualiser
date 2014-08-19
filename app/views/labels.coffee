@@ -20,7 +20,8 @@ define ["lib/options", "lib/svg"], (Options, Svg) ->
     _label: (index, racer) ->
       attributes =
         class: "label racer_#{racer.id}", dy: "0.3em"
-        x: 2, y: (Options.racer_path_height + Options.racer_path_height * index)
+        x: 2, y: Options.racer_path_height + Options.racer_path_height * index,
+        "data-racer": "racer_#{racer.id}"
 
       _.tap(Svg.element("text", attributes), (element) ->
         element.textContent = racer.label

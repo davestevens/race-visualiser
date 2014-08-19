@@ -3,10 +3,11 @@ define [
   "lib/options"
   "lib/svg"
   "lib/style"
+  "lib/utils"
   "views/lap_markers"
   "views/race"
   "views/controls"
-], ($, Options, Svg, Style, LapMarkersView, RaceView, ControlsView) ->
+], ($, Options, Svg, Style, Utils, LapMarkersView, RaceView, ControlsView) ->
   class RaceVisualiser
     constructor: (params) ->
       _.extend(Options, params.options)
@@ -55,39 +56,59 @@ define [
       )
 
     _after_render: ->
-      _.bindAll(@, "_mouseover_path", "_mouseout_path", "_change_view")
       $("#paths").bind("mouseover", ".path", @_mouseover_path)
       $("#paths").bind("mouseout", ".path", @_mouseout_path)
+      $("#labels").bind("click", ".label", @_click_label)
       $(".js-change-view").bind("click", @_change_view)
 
-    _mouseover_path: (event) ->
+    _mouseover_path: (event) =>
       $path = $(event.target).parent()
       racer = $path.data("racer")
+      $position = $("#positions .#{racer}")
+      $paths = $("#paths")
 
-      @_add_class($path, "active")
+      Utils.add_active_class([$path, $position, $paths])
       $path.parent().append($path)
-      $("#positions .#{racer}").show()
 
-    _mouseout_path: (event) ->
+    _mouseout_path: (event) =>
       $path = $(event.target).parent()
       racer = $path.data("racer")
+      $position = $("#positions .#{racer}")
 
-      @_remove_class($path, "active")
-      $("#positions .#{racer}").hide()
+      @_remove_path_highlight($path, $position)
+      @_remove_paths_highlight()
 
-    _change_view: ->
+    _click_label: (event) =>
+      racer = $(event.target).data("racer")
+      $label = $("#labels .#{racer}")
+      $path = $("#paths .#{racer}")
+      $position = $("#positions .#{racer}")
+      $paths = $("#paths")
+
+      if _.contains($path.attr("class").split(/\s+/), "active")
+        Utils.remove_active_class([$label])
+        @_remove_path_highlight($path, $position)
+        @_remove_paths_highlight()
+      else
+        Utils.add_active_class([$label, $path, $position, $paths])
+
+    _remove_path_highlight: ($path, $position) ->
+      racer = $path.data("racer")
+      $label = $("#labels .#{racer}")
+      return if _.contains($label.attr("class").split(/\s+/), "active")
+      Utils.remove_active_class([$path, $position])
+
+    _remove_paths_highlight: ->
+      $paths = $("#paths")
+      Utils.remove_active_class([$paths]) if @_no_active_labels()
+
+    _no_active_labels: -> $("#labels .active").length == 0
+
+    _change_view: =>
       start = +$(".js-start_lap").val()
       end = +$(".js-end_lap").val()
       return alert("Invalid Lap selection") if (start >= end)
       @render(start: start, end: end)
-
-    _add_class: ($element, class_name) ->
-      classes = "#{$element.attr('class')} active"
-      $element.attr("class", classes)
-
-    _remove_class: ($element, class_name) ->
-      classes = $element.attr("class").replace(class_name, "")
-      $element.attr("class", classes)
 
     _style: -> new Style()
 
