@@ -11,4 +11,20 @@ define ["lib/options", "lib/svg"], (Options, Svg) ->
     curve: (a, b, index) ->
       Svg.line_to_curve(a, b, { x: Options.racer_path_x_padding })
 
+    add_active_class: (elements) ->
+      _.each(elements, (element) => @add_class($(element), "active"))
+
+    remove_active_class: (elements) ->
+      _.each(elements, (element) => @remove_class($(element), "active"))
+
+    add_class: ($element, class_name) ->
+      current = ($element.attr("class") || "").split(/\s+/)
+      updated = _.uniq(current.concat(class_name))
+      $element.attr("class", updated.join(" "))
+
+    remove_class: ($element, class_name) ->
+      current = ($element.attr("class") || "").split(/\s+/)
+      updated = _.reject(current, (name) -> name == class_name)
+      $element.attr("class", updated.join(" "))
+
   new Utils()

@@ -29,12 +29,14 @@ define ["underscore", "lib/options", "lib/svg"], (_, Options, Svg) ->
           " opacity: 0.7;" +
           " stroke-width: #{Options.lap_marker_big_tick_width}px" +
           "}"
+        "#labels .label { cursor: pointer }"
+        "#labels .label.active { fill: #{Options.racer_label_active_colour} }"
         "#paths { fill: none }"
         "#paths .path {" +
           " stroke-width: #{Options.racer_path_width}px;" +
           " opacity: 0.6;" +
           "}"
-        "#paths:hover .path { opacity: 0.3; }"
+        "#paths.active .path { opacity: 0.3; }"
         "#paths .path.active {" +
           " opacity: 1;" +
           " cursor: pointer;" +
@@ -42,6 +44,7 @@ define ["underscore", "lib/options", "lib/svg"], (_, Options, Svg) ->
           "}"
         "#paths .path .dnf { stroke-dasharray: 10,5 }"
         "#positions .position { display: none; }"
+        "#positions .position.active { display: block; }"
         "#positions .position .marker_text {" +
           " font-size: 14px;" +
           " text-anchor: middle;" +

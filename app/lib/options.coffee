@@ -7,6 +7,7 @@ define ["underscore"], (_) ->
 
   RacerLabel =
     racer_label_width: 150
+    racer_label_active_colour: "#0000FF"
 
   RacerPath =
     racer_path_height: 20
