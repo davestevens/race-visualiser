@@ -7,7 +7,8 @@ define('lib/options',["underscore"], function(_) {
     lap_marker_label_height: 20
   };
   RacerLabel = {
-    racer_label_width: 150
+    racer_label_width: 150,
+    racer_label_active_colour: "#0000FF"
   };
   RacerPath = {
     racer_path_height: 20,
@@ -114,12 +115,79 @@ define('lib/style',["underscore", "lib/options", "lib/svg"], function(_, Options
     };
 
     Style.prototype.options = {
-      styles: ["svg { font-family: " + Options.font_family + "; }", "#lap_markers .marker {" + " stroke-width: 1px;" + " opacity: 0.5;" + (" stroke: " + Options.lap_marker_colour) + "}", "#lap_markers .number {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#lap_markers .big {" + " opacity: 0.7;" + (" stroke-width: " + Options.lap_marker_big_tick_width + "px") + "}", "#paths { fill: none }", "#paths .path {" + (" stroke-width: " + Options.racer_path_width + "px;") + " opacity: 0.6;" + "}", "#paths:hover .path { opacity: 0.3; }", "#paths .path.active {" + " opacity: 1;" + " cursor: pointer;" + (" stroke-width: " + Options.racer_path_width_highlight + "px") + "}", "#paths .path .dnf { stroke-dasharray: 10,5 }", "#positions .position { display: none; }", "#positions .position .marker_text {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#positions .position .marker_circle {" + " stroke-width: 1px;" + " fill: #FFFFFF" + "}"]
+      styles: ["svg { font-family: " + Options.font_family + "; }", "#lap_markers .marker {" + " stroke-width: 1px;" + " opacity: 0.5;" + (" stroke: " + Options.lap_marker_colour) + "}", "#lap_markers .number {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#lap_markers .big {" + " opacity: 0.7;" + (" stroke-width: " + Options.lap_marker_big_tick_width + "px") + "}", "#labels .label { cursor: pointer }", "#labels .label.active { fill: " + Options.racer_label_active_colour + " }", "#paths { fill: none }", "#paths .path {" + (" stroke-width: " + Options.racer_path_width + "px;") + " opacity: 0.6;" + "}", "#paths.active .path { opacity: 0.3; }", "#paths .path.active {" + " opacity: 1;" + " cursor: pointer;" + (" stroke-width: " + Options.racer_path_width_highlight + "px") + "}", "#paths .path .dnf { stroke-dasharray: 10,5 }", "#positions .position { display: none; }", "#positions .position.active { display: block; }", "#positions .position .marker_text {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#positions .position .marker_circle {" + " stroke-width: 1px;" + " fill: #FFFFFF" + "}"]
     };
 
     return Style;
 
   })();
+});
+
+define('lib/utils',["lib/options", "lib/svg"], function(Options, Svg) {
+  var Utils;
+  Utils = (function() {
+    function Utils() {}
+
+    Utils.prototype.each_cons = function(a, cons_size, fn) {
+      var i, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 0, _ref = a.length - cons_size; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+        _results.push(fn(a.slice(i, +(i + (cons_size - 1)) + 1 || 9e9), i));
+      }
+      return _results;
+    };
+
+    Utils.prototype.stroke_colour = function(racer) {
+      return racer.colour || Options.racer_path_default_colour;
+    };
+
+    Utils.prototype.position_to_coord = function(index, position, dx) {
+      return {
+        x: index * dx,
+        y: position * Options.racer_path_height
+      };
+    };
+
+    Utils.prototype.curve = function(a, b, index) {
+      return Svg.line_to_curve(a, b, {
+        x: Options.racer_path_x_padding
+      });
+    };
+
+    Utils.prototype.add_active_class = function(elements) {
+      var _this = this;
+      return _.each(elements, function(element) {
+        return _this.add_class($(element), "active");
+      });
+    };
+
+    Utils.prototype.remove_active_class = function(elements) {
+      var _this = this;
+      return _.each(elements, function(element) {
+        return _this.remove_class($(element), "active");
+      });
+    };
+
+    Utils.prototype.add_class = function($element, class_name) {
+      var current, updated;
+      current = ($element.attr("class") || "").split(/\s+/);
+      updated = _.uniq(current.concat(class_name));
+      return $element.attr("class", updated.join(" "));
+    };
+
+    Utils.prototype.remove_class = function($element, class_name) {
+      var current, updated;
+      current = ($element.attr("class") || "").split(/\s+/);
+      updated = _.reject(current, function(name) {
+        return name === class_name;
+      });
+      return $element.attr("class", updated.join(" "));
+    };
+
+    return Utils;
+
+  })();
+  return new Utils();
 });
 
 define('views/laps/markers',["lib/options", "lib/svg"], function(Options, Svg) {
@@ -303,7 +371,8 @@ define('views/labels',["lib/options", "lib/svg"], function(Options, Svg) {
         "class": "label racer_" + racer.id,
         dy: "0.3em",
         x: 2,
-        y: Options.racer_path_height + Options.racer_path_height * index
+        y: Options.racer_path_height + Options.racer_path_height * index,
+        "data-racer": "racer_" + racer.id
       };
       return _.tap(Svg.element("text", attributes), function(element) {
         return element.textContent = racer.label;
@@ -313,43 +382,6 @@ define('views/labels',["lib/options", "lib/svg"], function(Options, Svg) {
     return LabelsView;
 
   })();
-});
-
-define('lib/utils',["lib/options", "lib/svg"], function(Options, Svg) {
-  var Utils;
-  Utils = (function() {
-    function Utils() {}
-
-    Utils.prototype.each_cons = function(a, cons_size, fn) {
-      var i, _i, _ref, _results;
-      _results = [];
-      for (i = _i = 0, _ref = a.length - cons_size; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-        _results.push(fn(a.slice(i, +(i + (cons_size - 1)) + 1 || 9e9), i));
-      }
-      return _results;
-    };
-
-    Utils.prototype.stroke_colour = function(racer) {
-      return racer.colour || Options.racer_path_default_colour;
-    };
-
-    Utils.prototype.position_to_coord = function(index, position, dx) {
-      return {
-        x: index * dx,
-        y: position * Options.racer_path_height
-      };
-    };
-
-    Utils.prototype.curve = function(a, b, index) {
-      return Svg.line_to_curve(a, b, {
-        x: Options.racer_path_x_padding
-      });
-    };
-
-    return Utils;
-
-  })();
-  return new Utils();
 });
 
 define('views/paths',["lib/options", "lib/svg", "lib/utils"], function(Options, Svg, Utils) {
@@ -711,10 +743,16 @@ define('views/controls',["jquery"], function($) {
   })();
 });
 
-define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "views/lap_markers", "views/race", "views/controls"], function($, Options, Svg, Style, LapMarkersView, RaceView, ControlsView) {
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "lib/utils", "views/lap_markers", "views/race", "views/controls"], function($, Options, Svg, Style, Utils, LapMarkersView, RaceView, ControlsView) {
   var RaceVisualiser;
   return RaceVisualiser = (function() {
     function RaceVisualiser(params) {
+      this._change_view = __bind(this._change_view, this);
+      this._click_label = __bind(this._click_label, this);
+      this._mouseout_path = __bind(this._mouseout_path, this);
+      this._mouseover_path = __bind(this._mouseover_path, this);
       _.extend(Options, params.options);
       this.data = params.data;
       this.el = params.el;
@@ -777,27 +815,67 @@ define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "view
     };
 
     RaceVisualiser.prototype._after_render = function() {
-      _.bindAll(this, "_mouseover_path", "_mouseout_path", "_change_view");
       $("#paths").bind("mouseover", ".path", this._mouseover_path);
       $("#paths").bind("mouseout", ".path", this._mouseout_path);
+      $("#labels").bind("click", ".label", this._click_label);
       return $(".js-change-view").bind("click", this._change_view);
     };
 
     RaceVisualiser.prototype._mouseover_path = function(event) {
-      var $path, racer;
+      var $path, $paths, $position, racer;
       $path = $(event.target).parent();
       racer = $path.data("racer");
-      this._add_class($path, "active");
-      $path.parent().append($path);
-      return $("#positions ." + racer).show();
+      $position = $("#positions ." + racer);
+      $paths = $("#paths");
+      Utils.add_active_class([$path, $position, $paths]);
+      return $path.parent().append($path);
     };
 
     RaceVisualiser.prototype._mouseout_path = function(event) {
-      var $path, racer;
+      var $path, $position, racer;
       $path = $(event.target).parent();
       racer = $path.data("racer");
-      this._remove_class($path, "active");
-      return $("#positions ." + racer).hide();
+      $position = $("#positions ." + racer);
+      this._remove_path_highlight($path, $position);
+      return this._remove_paths_highlight();
+    };
+
+    RaceVisualiser.prototype._click_label = function(event) {
+      var $label, $path, $paths, $position, racer;
+      racer = $(event.target).data("racer");
+      $label = $("#labels ." + racer);
+      $path = $("#paths ." + racer);
+      $position = $("#positions ." + racer);
+      $paths = $("#paths");
+      if (_.contains($path.attr("class").split(/\s+/), "active")) {
+        Utils.remove_active_class([$label]);
+        this._remove_path_highlight($path, $position);
+        return this._remove_paths_highlight();
+      } else {
+        return Utils.add_active_class([$label, $path, $position, $paths]);
+      }
+    };
+
+    RaceVisualiser.prototype._remove_path_highlight = function($path, $position) {
+      var $label, racer;
+      racer = $path.data("racer");
+      $label = $("#labels ." + racer);
+      if (_.contains($label.attr("class").split(/\s+/), "active")) {
+        return;
+      }
+      return Utils.remove_active_class([$path, $position]);
+    };
+
+    RaceVisualiser.prototype._remove_paths_highlight = function() {
+      var $paths;
+      $paths = $("#paths");
+      if (this._no_active_labels()) {
+        return Utils.remove_active_class([$paths]);
+      }
+    };
+
+    RaceVisualiser.prototype._no_active_labels = function() {
+      return $("#labels .active").length === 0;
     };
 
     RaceVisualiser.prototype._change_view = function() {
@@ -811,18 +889,6 @@ define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "view
         start: start,
         end: end
       });
-    };
-
-    RaceVisualiser.prototype._add_class = function($element, class_name) {
-      var classes;
-      classes = "" + ($element.attr('class')) + " active";
-      return $element.attr("class", classes);
-    };
-
-    RaceVisualiser.prototype._remove_class = function($element, class_name) {
-      var classes;
-      classes = $element.attr("class").replace(class_name, "");
-      return $element.attr("class", classes);
     };
 
     RaceVisualiser.prototype._style = function() {
