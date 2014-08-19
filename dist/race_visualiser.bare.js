@@ -115,7 +115,7 @@ define('lib/style',["underscore", "lib/options", "lib/svg"], function(_, Options
     };
 
     Style.prototype.options = {
-      styles: ["svg { font-family: " + Options.font_family + "; }", "#lap_markers .marker {" + " stroke-width: 1px;" + " opacity: 0.5;" + (" stroke: " + Options.lap_marker_colour) + "}", "#lap_markers .number {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#lap_markers .big {" + " opacity: 0.7;" + (" stroke-width: " + Options.lap_marker_big_tick_width + "px") + "}", "#labels .label { cursor: pointer }", "#labels .label.active { fill: " + Options.racer_label_active_colour + " }", "#paths { fill: none }", "#paths .path {" + (" stroke-width: " + Options.racer_path_width + "px;") + " opacity: 0.6;" + "}", "#paths.active .path { opacity: 0.3; }", "#paths .path.active {" + " opacity: 1;" + " cursor: pointer;" + (" stroke-width: " + Options.racer_path_width_highlight + "px") + "}", "#paths .path .dnf { stroke-dasharray: 10,5 }", "#positions .position { display: none; }", "#positions .position.active { display: block; }", "#positions .position .marker_text {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#positions .position .marker_circle {" + " stroke-width: 1px;" + " fill: #FFFFFF" + "}"]
+      styles: ["svg { font-family: " + Options.font_family + "; }", "#lap_markers .marker {" + " stroke-width: 1px;" + " opacity: 0.5;" + (" stroke: " + Options.lap_marker_colour) + "}", "#lap_markers .number {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#lap_markers .big {" + " opacity: 0.7;" + (" stroke-width: " + Options.lap_marker_big_tick_width + "px") + "}", "#labels .label { cursor: pointer }", "#labels .label.active { fill: " + Options.racer_label_active_colour + " }", "#paths { fill: none }", "#paths .path {" + (" stroke-width: " + Options.racer_path_width + "px;") + " opacity: 0.6;" + "}", "#paths.active .path { opacity: 0.3; }", "#paths .path.active {" + " opacity: 1;" + " cursor: pointer;" + (" stroke-width: " + Options.racer_path_width_highlight + "px") + "}", "#paths .path .dnf { stroke-dasharray: 10,5 }", "#positions.hidden { display: none; }", "#positions .position { display: none; }", "#positions .position.active { display: block; }", "#positions .position .marker_text {" + " font-size: 14px;" + " text-anchor: middle;" + " stroke: #000000;" + " stroke-width: 0" + "}", "#positions .position .marker_circle {" + " stroke-width: 1px;" + " fill: #FFFFFF" + "}"]
     };
 
     return Style;
@@ -689,7 +689,7 @@ define('views/controls',["jquery"], function($) {
     ControlsView.prototype.render = function() {
       return $("<div/>", {
         "class": "controls"
-      }).append(this._start_lap()).append(this._end_lap()).append(this._button());
+      }).append(this._start_lap()).append(this._end_lap()).append(this._button()).append(this._position_toggle());
     };
 
     ControlsView.prototype._start_lap = function() {
@@ -715,6 +715,18 @@ define('views/controls',["jquery"], function($) {
         "class": "js-change-view",
         text: "Update"
       });
+    };
+
+    ControlsView.prototype._position_toggle = function() {
+      return $("<div/>", {
+        "class": "position_toggle"
+      }).append($("<label/>", {
+        text: "Hide Position Markers",
+        "for": "js-position-toggle"
+      })).append($("<input/>", {
+        type: "checkbox",
+        id: "js-position-toggle"
+      }));
     };
 
     ControlsView.prototype._select = function(class_name) {
@@ -753,6 +765,7 @@ define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "lib/
       this._click_label = __bind(this._click_label, this);
       this._mouseout_path = __bind(this._mouseout_path, this);
       this._mouseover_path = __bind(this._mouseover_path, this);
+      this._toggle_position_markers = __bind(this._toggle_position_markers, this);
       _.extend(Options, params.options);
       this.data = params.data;
       this.el = params.el;
@@ -818,7 +831,18 @@ define('race_visualiser',["jquery", "lib/options", "lib/svg", "lib/style", "lib/
       $("#paths").bind("mouseover", ".path", this._mouseover_path);
       $("#paths").bind("mouseout", ".path", this._mouseout_path);
       $("#labels").bind("click", ".label", this._click_label);
+      $(".position_toggle").bind("change", "input", this._toggle_position_markers);
       return $(".js-change-view").bind("click", this._change_view);
+    };
+
+    RaceVisualiser.prototype._toggle_position_markers = function(event) {
+      var $positions;
+      $positions = $("#positions");
+      if ($(event.target).is(":checked")) {
+        return Utils.add_class($positions, "hidden");
+      } else {
+        return Utils.remove_class($positions, "hidden");
+      }
     };
 
     RaceVisualiser.prototype._mouseover_path = function(event) {
