@@ -59,7 +59,15 @@ define [
       $("#paths").bind("mouseover", ".path", @_mouseover_path)
       $("#paths").bind("mouseout", ".path", @_mouseout_path)
       $("#labels").bind("click", ".label", @_click_label)
+      $(".position_toggle").bind("change", "input", @_toggle_position_markers)
       $(".js-change-view").bind("click", @_change_view)
+
+    _toggle_position_markers: (event) =>
+      $positions = $("#positions")
+      if $(event.target).is(":checked")
+        Utils.add_class($positions, "hidden")
+      else
+        Utils.remove_class($positions, "hidden")
 
     _mouseover_path: (event) =>
       $path = $(event.target).parent()

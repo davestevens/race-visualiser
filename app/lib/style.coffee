@@ -43,6 +43,7 @@ define ["underscore", "lib/options", "lib/svg"], (_, Options, Svg) ->
           " stroke-width: #{Options.racer_path_width_highlight}px" +
           "}"
         "#paths .path .dnf { stroke-dasharray: 10,5 }"
+        "#positions.hidden { display: none; }"
         "#positions .position { display: none; }"
         "#positions .position.active { display: block; }"
         "#positions .position .marker_text {" +
